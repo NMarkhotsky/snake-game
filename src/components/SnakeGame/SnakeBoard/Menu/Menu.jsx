@@ -4,9 +4,9 @@ import { StartButton, WrapperMenu } from './Menu.styled';
 const Menu = ({ onRouteChange }) => {
   return (
     <WrapperMenu>
-      <div>
-        <StartButton onClick={onRouteChange} type="button" value="start game" />
-      </div>
+      <StartButton onClick={onRouteChange} type="button" value="start game">
+        Start Game
+      </StartButton>
     </WrapperMenu>
   );
 };

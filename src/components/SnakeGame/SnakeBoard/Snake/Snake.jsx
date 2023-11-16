@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 import { SnakeWrapper } from './Snake.styled';
 
-const Snake = (props) => {
+const Snake = ({ snakeDots }) => {
   return (
     <div>
-      {props.snakeDots.map((dot, i) => {
+      {snakeDots.map((dot, i) => {
         const style = {
           left: `${dot[0]}%`,
           top: `${dot[1]}%`,

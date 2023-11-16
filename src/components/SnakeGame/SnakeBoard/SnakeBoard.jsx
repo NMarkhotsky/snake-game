@@ -2,13 +2,19 @@ import { useState, useEffect } from 'react';
 import Snake from './Snake/Snake';
 import Food from './Food/Food';
 import Menu from './Menu/Menu';
-import { GameArea } from './SnakeBoard.styled';
+import {
+  GameArea,
+  GameContainer,
+  GameHighScore,
+  GameScore,
+  GameTitle,
+} from './SnakeBoard.styled';
 
 function getRandomFood() {
   const min = 1;
-  const max = 49; // Зміни верхню границю для генерації їжі
-  const x = Math.floor(Math.random() * (max - min + 1)) * 2;
-  const y = Math.floor(Math.random() * (max - min + 1)) * 2;
+  const max = 24;
+  const x = Math.floor(Math.random() * (max - min + 1)) * 4;
+  const y = Math.floor(Math.random() * (max - min + 1)) * 4;
 
   return [x, y];
 }
@@ -17,16 +23,51 @@ const initialState = {
   food: getRandomFood(),
   direction: 'RIGHT',
   speed: 200,
+  speedLevel: 0,
   route: 'menu',
   snakeDots: [
     [0, 0],
-    [0, 2],
+    [0, 4],
+    [0, 8],
   ],
 };
 
 const GameBoard = () => {
   const [state, setState] = useState(initialState);
-  const [isPaused, setIsPaused] = useState(false);
+  const [score, setScore] = useState(0);
+  const [eatFood, setEatFood] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(moveSnake, state.speed);
+    document.addEventListener('keydown', onKeyDown);
+
+    onSnakeOutOfBounds();
+    onSnakeCollapsed();
+
+    if (score >= 50 && score / 50 > state.speedLevel) {
+      setState((prevState) => ({
+        ...prevState,
+        speedLevel: prevState.speedLevel + 1,
+      }));
+      increaseSpeed();
+      console.log('state.speed: ', state.speed);
+    }
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [state, score]);
+
+  useEffect(() => {
+    if (eatFood === 1) {
+      setScore((prev) => prev + 1);
+    } else if (eatFood === 2) {
+      setScore((prev) => prev + 5);
+    } else if (eatFood >= 3) {
+      setScore((prev) => prev + 10);
+    }
+  }, [eatFood]);
 
   const onKeyDown = (e) => {
     const currentDirection = state.direction;
@@ -59,12 +100,6 @@ const GameBoard = () => {
         setState({ ...state, direction: newDirection });
       }
     }
-
-    if (e.keyCode === 32) {
-      // Код клавіші "пробіл"
-      setIsPaused(!isPaused); // Зміна стану паузи
-      return;
-    }
   };
 
   const moveSnake = () => {
@@ -73,24 +108,26 @@ const GameBoard = () => {
       let head = dots[dots.length - 1];
       switch (state.direction) {
         case 'RIGHT':
-          head = [head[0] + 2, head[1]];
+          head = [head[0] + 4, head[1]];
           break;
         case 'LEFT':
-          head = [head[0] - 2, head[1]];
+          head = [head[0] - 4, head[1]];
           break;
         case 'DOWN':
-          head = [head[0], head[1] + 2];
+          head = [head[0], head[1] + 4];
           break;
         case 'UP':
-          head = [head[0], head[1] - 2];
+          head = [head[0], head[1] - 4];
           break;
         default:
           break;
       }
       dots.push(head);
-
+      console.log('state.food[0]: ', state.food[0]);
+      console.log('head[0]: ', head[0]);
       if (head[0] === state.food[0] && head[1] === state.food[1]) {
         onSnakeEats();
+        setEatFood((prev) => prev + 1);
       } else {
         dots.shift();
       }
@@ -133,7 +170,6 @@ const GameBoard = () => {
     }));
 
     increaseSnake();
-    increaseSpeed();
   };
 
   const increaseSnake = () => {
@@ -162,39 +198,37 @@ const GameBoard = () => {
       ...initialState,
       route: 'game',
     });
+
+    setScore(0);
+    setEatFood(0);
   };
 
   const gameOver = () => {
-    alert(`GAME OVER, your score is ${state.snakeDots.length - 2}`);
+    // alert(`GAME OVER, your score is ${score}`);
     setState({ ...initialState, route: 'menu' });
   };
 
-  useEffect(() => {
-    const interval = setInterval(moveSnake, state.speed);
-    document.addEventListener('keydown', onKeyDown);
-
-    onSnakeOutOfBounds();
-    onSnakeCollapsed();
-
-    return () => {
-      clearInterval(interval);
-      document.removeEventListener('keydown', onKeyDown);
-    };
-  }, [state]);
-
   return (
-    <div>
+    <GameContainer>
+      <GameTitle>Snake Game</GameTitle>
+      <GameHighScore>High Score: {score}</GameHighScore>
       {state.route === 'menu' ? (
-        <div>
-          <Menu onRouteChange={onRouteChange} />
-        </div>
+        <Menu onRouteChange={onRouteChange} />
       ) : (
-        <GameArea>
-          <Snake snakeDots={state.snakeDots} />
-          <Food dot={state.food} />
-        </GameArea>
+        <>
+          {
+            <GameScore>
+              <span>Score</span>
+              <span>{score}</span>
+            </GameScore>
+          }
+          <GameArea>
+            <Snake snakeDots={state.snakeDots} />
+            <Food dot={state.food} />
+          </GameArea>
+        </>
       )}
-    </div>
+    </GameContainer>
   );
 };
 
