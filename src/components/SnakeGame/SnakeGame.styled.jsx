@@ -2,8 +2,7 @@ import styled from 'styled-components';
 
 export const GameContainer = styled.div`
   background-color: #ffffdd;
-  height: 100vh;
-  overflow: hidden;
+  height: 100%;
 `;
 
 export const InfoBox = styled.div`
@@ -82,8 +81,10 @@ export const GameScore = styled.div`
 
 export const GameArea = styled.div`
   position: relative;
-  width: 400px;
-  height: 400px;
+  width: 80vw;
+  height: 80vw;
+  max-width: 400px;
+  max-height: 400px;
 
   display: flex;
 
@@ -91,4 +92,11 @@ export const GameArea = styled.div`
 
   outline: 10px solid #61a3ba;
   background-color: #fff;
+
+  @media screen and (max-width: 1366px) {
+    width: 70vw;
+    height: 70vw;
+    max-width: 300px;
+    max-height: 300px;
+  }
 `;
