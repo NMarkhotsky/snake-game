@@ -1,6 +1,4 @@
-# Snake Game Test Task 🐍
-
-Welcome, future Full Stack developer! This test task challenges you to create the classic "Snake" game using specified technologies: React, Node.js, and PostgreSQL.
+# Snake Game 🐍
 
 ## Task Overview
 The objective is to implement a fully functional "Snake" game with the following functionalities and requirements.
