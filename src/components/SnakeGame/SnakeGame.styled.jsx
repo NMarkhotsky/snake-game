@@ -79,6 +79,22 @@ export const GameScore = styled.div`
   }
 `;
 
+export const PauseBox = styled.div`
+  margin: 10px 0;
+  text-align: center;
+  font-size: 16px;
+`;
+
+export const PauseText = styled.span`
+  & kbd {
+    display: inline-block;
+    padding: 2px 4px;
+    border-radius: 5px;
+    background-color: #333;
+    color: salmon;
+  }
+`;
+
 export const GameArea = styled.div`
   position: relative;
   width: 80vw;

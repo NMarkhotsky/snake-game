@@ -7,7 +7,7 @@ import { initialState } from '../../constants';
 import { GrLogout } from 'react-icons/gr';
 import { useAuth } from '../../hooks/useAuth';
 import { GameOverModal } from './GameOverModal/GameOverModal';
-import { PauseModal } from '../PauseModal/PauseModal';
+import { PauseModal } from './PauseModal/PauseModal';
 import { ListScores } from './ListScores/ListScores';
 import { Snake } from './Snake/Snake';
 import { Food } from './Food/Food';
@@ -19,14 +19,16 @@ import {
   GameHighScore,
   GameScore,
   InfoBox,
+  PauseBox,
+  PauseText,
 } from './SnakeGame.styled';
 
 const SnakeGame = () => {
   const [state, setState] = useState(initialState);
   const [score, setScore] = useState(0);
   const [eatFood, setEatFood] = useState(0);
-  const [isGameOver, setIsGameOver] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isGameOver, setIsGameOver] = useState(false);
   const [isOpenBestScores, setIsOpenBestScores] = useState(false);
 
   const dispatch = useDispatch();
@@ -71,7 +73,7 @@ const SnakeGame = () => {
   }, [eatFood]);
 
   const onKeyDown = (e) => {
-    if (e.key === ' ') {
+    if (e.key === 'Escape' && game && !isGameOver && !isOpenBestScores) {
       setIsPaused(!isPaused);
     }
     const currentDirection = state.direction;
@@ -242,18 +244,11 @@ const SnakeGame = () => {
               </GameScore>
             }
             {
-              <div
-                style={{
-                  textAlign: 'center',
-                  marginBottom: '10px',
-                  fontSize: '20px',
-                }}
-              >
-                <span>
-                  Press <strong style={{ color: '#a2c579' }}>space</strong> to
-                  pause
-                </span>
-              </div>
+              <PauseBox>
+                <PauseText>
+                  Press <kbd>esc</kbd> to pause
+                </PauseText>
+              </PauseBox>
             }
             <GameArea>
               <Snake snakeDots={state.snakeDots} />
@@ -262,10 +257,10 @@ const SnakeGame = () => {
           </>
         )}
       </GameContainer>
+      {isPaused && <PauseModal />}
       {isGameOver && (
         <GameOverModal onRouteChange={onRouteChange} score={score} />
       )}
-      {isPaused && <PauseModal />}
       {isOpenBestScores && <ListScores isOpen={openBestScores} />}
     </>
   );

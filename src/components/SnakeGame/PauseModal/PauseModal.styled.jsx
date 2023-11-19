@@ -28,9 +28,3 @@ export const PausedModal = styled.div`
     color: white;
   }
 `;
-
-export const ClickDir = styled.p`
-  color: hsl(0, 0%, 30%);
-  font-style: italic;
-  font-size: 1.3rem;
-`;
