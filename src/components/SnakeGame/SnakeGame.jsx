@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
 import Snake from './Snake/Snake';
 import Food from './Food/Food';
@@ -70,7 +71,6 @@ const SnakeGame = () => {
   }, [eatFood]);
 
   const onKeyDown = (e) => {
-    console.log('e: ', e.key);
     if (e.key === ' ') {
       setIsPaused(!isPaused);
     }

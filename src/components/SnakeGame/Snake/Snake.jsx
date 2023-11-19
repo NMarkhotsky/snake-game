@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import { SnakeWrapper } from './Snake.styled';
 
 const Snake = ({ snakeDots }) => {
@@ -15,3 +15,7 @@ const Snake = ({ snakeDots }) => {
   );
 };
 export default Snake;
+
+Snake.propTypes = {
+  snakeDots: PropTypes.array.isRequired,
+};

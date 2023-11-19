@@ -6,7 +6,7 @@ import {
 
 export const PauseModal = () => {
   return (
-    <PausedModalContainer onClick={() => ''}>
+    <PausedModalContainer>
       <PausedModal>
         <h2>Paused</h2>
         <ClickDir>

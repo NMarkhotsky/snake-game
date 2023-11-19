@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import { StartButton } from '../Menu/Menu.styled';
 import {
   FinalScore,
@@ -18,4 +18,9 @@ export const GameOverModal = ({ onRouteChange, score }) => {
       </GameOverModalWrapper>
     </GameOverModalContainer>
   );
+};
+
+GameOverModal.propTypes = {
+  onRouteChange: PropTypes.func.isRequired,
+  score: PropTypes.number.isRequired,
 };

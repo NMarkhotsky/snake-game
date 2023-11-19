@@ -1,6 +1,6 @@
+import PropTypes from 'prop-types';
 import { StartButton, WrapperMenu } from './Menu.styled';
 
-// eslint-disable-next-line react/prop-types
 const Menu = ({ onRouteChange }) => {
   return (
     <WrapperMenu>
@@ -12,3 +12,7 @@ const Menu = ({ onRouteChange }) => {
 };
 
 export default Menu;
+
+Menu.propTypes = {
+  onRouteChange: PropTypes.func.isRequired,
+};

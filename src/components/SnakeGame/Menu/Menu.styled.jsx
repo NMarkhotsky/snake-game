@@ -1,4 +1,13 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+
+const rotateAnimation = keyframes`
+  from {
+    transform: rotate(-15deg);
+  }
+  to {
+    transform: rotate(15deg);
+  }
+`;
 
 export const WrapperMenu = styled.div`
   display: flex;
@@ -18,4 +27,6 @@ export const StartButton = styled.button`
   background-color: #d2de32;
 
   cursor: pointer;
+
+  animation: ${rotateAnimation} 1000ms linear infinite alternate;
 `;

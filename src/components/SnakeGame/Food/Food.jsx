@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types';
 import { FoodWrapper } from './Food.styled';
 
 const Food = ({ dot }) => {
@@ -10,3 +10,7 @@ const Food = ({ dot }) => {
 };
 
 export default Food;
+
+Food.propTypes = {
+  dot: PropTypes.array.isRequired,
+};
