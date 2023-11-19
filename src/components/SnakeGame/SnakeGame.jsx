@@ -1,8 +1,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from 'react';
-import Snake from './Snake/Snake';
-import Food from './Food/Food';
-import Menu from './Menu/Menu';
+import { useDispatch } from 'react-redux';
+import { logout, updateUserScore } from '../../redux/auth/operations';
+import { getRandomFood } from '../../utils';
+import { initialState } from '../../constants';
+import { GrLogout } from 'react-icons/gr';
+import { useAuth } from '../../hooks/useAuth';
+import { GameOverModal } from './GameOverModal/GameOverModal';
+import { PauseModal } from '../PauseModal/PauseModal';
+import { ListScores } from './ListScores/ListScores';
+import { Snake } from './Snake/Snake';
+import { Food } from './Food/Food';
+import { Menu } from './Menu/Menu';
 import {
   Button,
   GameArea,
@@ -11,15 +20,6 @@ import {
   GameScore,
   InfoBox,
 } from './SnakeGame.styled';
-import { getRandomFood } from '../../utils';
-import { initialState } from '../../constants';
-import { GrLogout } from 'react-icons/gr';
-import { logout, updateUserScore } from '../../redux/auth/operations';
-import { useDispatch } from 'react-redux';
-import { useAuth } from '../../hooks/useAuth';
-import { GameOverModal } from './GameOverModal/GameOverModal';
-import { PauseModal } from '../PauseModal/PauseModal';
-import { ListScores } from './ListScores/ListScores';
 
 const SnakeGame = () => {
   const [state, setState] = useState(initialState);

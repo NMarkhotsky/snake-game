@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { SnakeWrapper } from './Snake.styled';
 
-const Snake = ({ snakeDots }) => {
+export const Snake = ({ snakeDots }) => {
   return (
     <div>
       {snakeDots.map((dot, i) => {
@@ -14,7 +14,6 @@ const Snake = ({ snakeDots }) => {
     </div>
   );
 };
-export default Snake;
 
 Snake.propTypes = {
   snakeDots: PropTypes.array.isRequired,

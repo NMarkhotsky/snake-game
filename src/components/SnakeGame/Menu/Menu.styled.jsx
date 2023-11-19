@@ -18,6 +18,9 @@ export const WrapperMenu = styled.div`
 `;
 
 export const StartButton = styled.button`
+  width: 110px;
+  height: 40px;
+  margin: 0 auto;
   padding: 10px;
   border-radius: 7px;
   border: 0px;

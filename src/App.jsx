@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { fetchCurrentUser } from './redux/auth/operations';
 import { GlobalStyle } from './components/GlobalStyle/GlobalStyle';
 import { SharedLayout } from './components/SharedLayout/SharedLayout';
-import { useEffect } from 'react';
-import { fetchCurrentUser } from './redux/auth/operations';
 
 function App() {
   const dispatch = useDispatch();
