@@ -9,7 +9,7 @@ const GamePage = lazy(() => import('../Pages/GamePage/GamePage'));
 
 const AppRoutes = () => {
   return (
-    <Suspense>
+    <Suspense fallback={<div>Loading...</div>}>
       <Routes>
         <Route
           path="/"

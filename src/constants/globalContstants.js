@@ -1,1 +1,1 @@
-export const BASE_URL = 'https://snake-game-backend-beta.vercel.app';
+export const BASE_URL = 'https://snake-game-backend-beta.vercel.app/api';

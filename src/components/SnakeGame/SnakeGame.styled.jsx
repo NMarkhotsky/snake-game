@@ -6,12 +6,32 @@ export const GameContainer = styled.div`
   overflow: hidden;
 `;
 
-export const GameTitle = styled.h1`
-  text-align: center;
-  background-color: #a2c579;
-  color: #000;
-  font-size: 40px;
-  padding-block: 24px;
+export const InfoBox = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+
+  & > span {
+    margin-right: 10px;
+  }
+
+  & > svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+
+    cursor: pointer;
+  }
+`;
+
+export const Button = styled.button`
+  margin-right: 10px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  border: none;
+  background-color: #d2de32;
+
+  cursor: pointer;
 `;
 
 export const GameHighScore = styled.div`

@@ -13,7 +13,7 @@ const authHeader = {
 };
 
 export const registerUser = async (credentials) => {
-  const { data } = await axios.post('api/auth/register', credentials);
+  const { data } = await axios.post('auth/register', credentials);
 
   authHeader.set(data.token);
 
@@ -21,7 +21,7 @@ export const registerUser = async (credentials) => {
 };
 
 export const loginUser = async (credentials) => {
-  const { data } = await axios.post('api/auth/login', credentials);
+  const { data } = await axios.post('auth/login', credentials);
 
   authHeader.set(data.token);
 
@@ -29,7 +29,7 @@ export const loginUser = async (credentials) => {
 };
 
 export const logoutUser = async () => {
-  const { data } = await axios.post('api/auth/logout');
+  const { data } = await axios.post('auth/logout');
   authHeader.unset();
 
   return data;
@@ -40,7 +40,23 @@ export const fetchUserByToken = async (persistedToken) => {
 
   const {
     data: { user },
-  } = await axios.get('api/current');
+  } = await axios.get('current');
 
   return user;
+};
+
+export const updateScore = async (score) => {
+  const {
+    data: { user },
+  } = await axios.post('addScore', { score });
+
+  return user;
+};
+
+export const getScores = async () => {
+  const {
+    data: { users },
+  } = await axios.get('scores');
+
+  return users;
 };

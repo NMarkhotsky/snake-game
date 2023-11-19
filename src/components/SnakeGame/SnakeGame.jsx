@@ -3,30 +3,43 @@ import Snake from './Snake/Snake';
 import Food from './Food/Food';
 import Menu from './Menu/Menu';
 import {
+  Button,
   GameArea,
   GameContainer,
   GameHighScore,
   GameScore,
-  GameTitle,
+  InfoBox,
 } from './SnakeGame.styled';
 import { getRandomFood } from '../../utils';
 import { initialState } from '../../constants';
 import { GrLogout } from 'react-icons/gr';
-import { logout } from '../../redux/auth/operations';
+import { logout, updateUserScore } from '../../redux/auth/operations';
 import { useDispatch } from 'react-redux';
 import { useAuth } from '../../hooks/useAuth';
+import { GameOverModal } from './GameOverModal/GameOverModal';
+import { PauseModal } from '../PauseModal/PauseModal';
+import { ListScores } from './ListScores/ListScores';
 
 const SnakeGame = () => {
   const [state, setState] = useState(initialState);
   const [score, setScore] = useState(0);
   const [eatFood, setEatFood] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isOpenBestScores, setIsOpenBestScores] = useState(false);
 
-  console.log('score: ', score);
   const dispatch = useDispatch();
   const { user } = useAuth();
 
+  const game = state.route === 'game';
+
   useEffect(() => {
-    const interval = setInterval(moveSnake, state.speed);
+    const interval = setInterval(() => {
+      if (!isPaused) {
+        moveSnake();
+      }
+    }, state.speed);
+
     document.addEventListener('keydown', onKeyDown);
 
     onSnakeOutOfBounds();
@@ -38,14 +51,13 @@ const SnakeGame = () => {
         speedLevel: prevState.speedLevel + 1,
       }));
       increaseSpeed();
-      console.log('state.speed: ', state.speed);
     }
 
     return () => {
       clearInterval(interval);
       document.removeEventListener('keydown', onKeyDown);
     };
-  }, [state, score]);
+  }, [state, score, isPaused]);
 
   useEffect(() => {
     if (eatFood === 1) {
@@ -58,20 +70,24 @@ const SnakeGame = () => {
   }, [eatFood]);
 
   const onKeyDown = (e) => {
+    console.log('e: ', e.key);
+    if (e.key === ' ') {
+      setIsPaused(!isPaused);
+    }
     const currentDirection = state.direction;
     let newDirection = currentDirection;
 
-    switch (e.keyCode) {
-      case 37:
+    switch (e.key) {
+      case 'ArrowLeft':
         newDirection = 'LEFT';
         break;
-      case 38:
+      case 'ArrowUp':
         newDirection = 'UP';
         break;
-      case 39:
+      case 'ArrowRight':
         newDirection = 'RIGHT';
         break;
-      case 40:
+      case 'ArrowDown':
         newDirection = 'DOWN';
         break;
       default:
@@ -91,7 +107,7 @@ const SnakeGame = () => {
   };
 
   const moveSnake = () => {
-    if (state.route === 'game') {
+    if (game) {
       let dots = [...state.snakeDots];
       let head = dots[dots.length - 1];
       switch (state.direction) {
@@ -127,7 +143,7 @@ const SnakeGame = () => {
   };
 
   const onSnakeOutOfBounds = () => {
-    if (state.route === 'game') {
+    if (game) {
       const head = state.snakeDots[state.snakeDots.length - 1];
       if (head[0] >= 100 || head[1] >= 100 || head[0] < 0 || head[1] < 0) {
         gameOver();
@@ -136,7 +152,7 @@ const SnakeGame = () => {
   };
 
   const onSnakeCollapsed = () => {
-    if (state.route === 'game') {
+    if (game) {
       const snake = [...state.snakeDots];
       const head = snake[snake.length - 1];
       snake.pop();
@@ -160,7 +176,7 @@ const SnakeGame = () => {
   };
 
   const increaseSnake = () => {
-    if (state.route === 'game') {
+    if (game) {
       const newSnake = [...state.snakeDots];
       newSnake.unshift([]);
 
@@ -172,7 +188,7 @@ const SnakeGame = () => {
   };
 
   const increaseSpeed = () => {
-    if (state.route === 'game' && state.speed > 10) {
+    if (game && state.speed > 10) {
       setState((prevState) => ({
         ...prevState,
         speed: prevState.speed - 20,
@@ -185,48 +201,73 @@ const SnakeGame = () => {
       ...initialState,
       route: 'game',
     });
-
     setScore(0);
     setEatFood(0);
+    setIsGameOver(false);
   };
 
   const gameOver = () => {
-    // alert(`GAME OVER, your score is ${score}`);
+    if (score > user.score) {
+      dispatch(updateUserScore(score));
+    }
+
+    setIsGameOver(true);
     setState({ ...initialState, route: 'menu' });
   };
 
+  const openBestScores = () => {
+    setIsOpenBestScores((prevState) => !prevState);
+  };
+
   return (
-    <GameContainer>
-      <div>
-        <GameTitle>Snake Game</GameTitle>
-        <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <span style={{ marginRight: '10px' }}>
-            {user.name || user.user.name}
-          </span>
-          <GrLogout
-            style={{ width: '24px', height: '24px', cursor: 'pointer' }}
-            onClick={() => dispatch(logout())}
-          />
+    <>
+      <GameContainer>
+        <div>
+          <InfoBox>
+            <Button onClick={openBestScores}>Best Scores</Button>
+            <span>{user.name}</span>
+            <GrLogout onClick={() => dispatch(logout())} />
+          </InfoBox>
         </div>
-      </div>
-      <GameHighScore>High Score: {score}</GameHighScore>
-      {state.route === 'menu' ? (
-        <Menu onRouteChange={onRouteChange} />
-      ) : (
-        <>
-          {
-            <GameScore>
-              <span>Score</span>
-              <span>{score}</span>
-            </GameScore>
-          }
-          <GameArea>
-            <Snake snakeDots={state.snakeDots} />
-            <Food dot={state.food} />
-          </GameArea>
-        </>
+        <GameHighScore>High Score: {user.score}</GameHighScore>
+
+        {state.route === 'menu' ? (
+          <Menu onRouteChange={onRouteChange} />
+        ) : (
+          <>
+            {
+              <GameScore>
+                <span>Score</span>
+                <span>{score}</span>
+              </GameScore>
+            }
+            {
+              <div
+                style={{
+                  textAlign: 'center',
+                  marginBottom: '10px',
+                  fontSize: '20px',
+                }}
+              >
+                <span>
+                  Press <strong style={{ color: '#a2c579' }}>space</strong> to
+                  pause
+                </span>
+              </div>
+            }
+            <GameArea>
+              <Snake snakeDots={state.snakeDots} />
+              <Food dot={state.food} />
+            </GameArea>
+          </>
+        )}
+      </GameContainer>
+      {isGameOver && (
+        <GameOverModal onRouteChange={onRouteChange} score={score} />
       )}
-    </GameContainer>
+      {isPaused && <PauseModal />}
+      {isOpenBestScores && <ListScores isOpen={openBestScores} />}
+    </>
   );
 };
 

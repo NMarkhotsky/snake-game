@@ -4,6 +4,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  updateScore,
 } from '../../services/authApi';
 
 export const login = createAsyncThunk(
@@ -41,18 +42,29 @@ export const logout = createAsyncThunk(
 
 export const fetchCurrentUser = createAsyncThunk(
   'auth/fetchCurrentUser',
-  async (_, thunkAPI) => {
-    const state = thunkAPI.getState();
+  async (_, { getState, rejectWithValue }) => {
+    const state = getState();
 
     const persistedToken = state.auth.token;
 
     if (persistedToken === null) {
-      return thunkAPI.rejectWithValue('Unable to fetch user');
+      return rejectWithValue('Unable to fetch user');
     }
     try {
       return fetchUserByToken(persistedToken);
     } catch (e) {
-      return thunkAPI.rejectWithValue(e.response.data.message);
+      return rejectWithValue(e.response.data.message);
+    }
+  }
+);
+
+export const updateUserScore = createAsyncThunk(
+  'auth/updateUserScore',
+  async (score, { rejectWithValue }) => {
+    try {
+      return await updateScore(score);
+    } catch (e) {
+      return rejectWithValue(e.response.data.message);
     }
   }
 );

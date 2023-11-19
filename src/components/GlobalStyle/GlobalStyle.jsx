@@ -11,7 +11,14 @@ body {
   text-rendering: optimizeSpeed;
   
   background-color: #ffd;
+
+  overflow: hidden;
+
+  &::-webkit-scrollbar {
+    display: none;
 }
+}
+
 
 h1,
 p {
