@@ -9,8 +9,7 @@ function App() {
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
-  }),
-    [dispatch];
+  }, [dispatch]);
 
   return (
     <>
