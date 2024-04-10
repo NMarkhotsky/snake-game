@@ -21,3 +21,5 @@ The objective is to implement a fully functional "Snake" game with the following
   - Third: 10 points
 - Speed Increase: For every 50 points accumulated, increase the snake's speed.
 - Deployment: Deploy the game to make it accessible.
+
+### [Backend](https://github.com/NMarkhotsky/snake-game-backend) 
