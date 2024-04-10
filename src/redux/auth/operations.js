@@ -6,13 +6,24 @@ import {
   registerUser,
   updateScore,
 } from '../../services/authApi';
+import {
+  errorMessage,
+  successMessage,
+  messageLogin,
+  messageRegister,
+} from '../../utils/notifications';
 
 export const login = createAsyncThunk(
   'auth/login',
   async (credentials, { rejectWithValue }) => {
     try {
-      return await loginUser(credentials);
+      const user = await loginUser(credentials);
+      successMessage(messageLogin.success);
+
+      return user;
     } catch (error) {
+      errorMessage(messageLogin.error);
+
       return rejectWithValue(error);
     }
   }
@@ -22,8 +33,13 @@ export const registration = createAsyncThunk(
   'auth/register',
   async (credentials, { rejectWithValue }) => {
     try {
-      return await registerUser(credentials);
+      const user = await registerUser(credentials);
+      successMessage(messageRegister.success);
+
+      return user;
     } catch (error) {
+      errorMessage(messageRegister.error);
+
       return rejectWithValue(error);
     }
   }
