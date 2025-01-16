@@ -37,6 +37,10 @@ const SnakeGame = () => {
   const game = state.route === 'game';
 
   useEffect(() => {
+    dispatch(updateUserScore(score));
+  },[user.score]);
+
+  useEffect(() => {
     const interval = setInterval(() => {
       if (!isPaused) {
         moveSnake();
@@ -231,7 +235,7 @@ const SnakeGame = () => {
             <GrLogout onClick={() => dispatch(logout())} />
           </InfoBox>
         </div>
-        <GameHighScore>High Score: {user.score}</GameHighScore>
+        <GameHighScore>High Score: {user.score? user.score : '0'}</GameHighScore>
 
         {state.route === 'menu' ? (
           <Menu onRouteChange={onRouteChange} />
